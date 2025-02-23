@@ -1,0 +1,5 @@
+valleycoin/.env
+valleycoin/.DS_Store
+caddy2/.DS_Store
+.DS_Store
+valleycoin/database/dump/backup.sql

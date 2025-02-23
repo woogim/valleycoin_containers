@@ -1,0 +1,29 @@
+services:
+  caddy:
+    image: caddy
+    container_name: caddy2
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2019:2019"
+      - "8501:8501"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:rw
+      - ./log:/var/log/caddy:rw
+      - ./site:/srv:rw
+      - ./data:/data:rw
+      - ./config:/config:rw
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - CADDY_VERSION=v2.7.5
+      - XDG_CONFIG_HOME=/config
+      - XDG_DATA_HOME=/data
+      - TZ=Asia/Seoul
+    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+    restart: unless-stopped
+    networks:
+      - caddy_gateway
+
+networks:
+  caddy_gateway:
+    external: true

@@ -1,0 +1,37 @@
+{
+  email wingseraq@gmail.com
+}
+
+(logger) {
+  log {
+    output file /var/log/caddy/{args.0}.log {
+      roll_size 5MiB
+      roll_local_time
+      roll_keep 10
+      roll_keep_for 720h
+    }
+
+    format json {
+      time_format rfc3339
+    }
+  }
+}
+
+
+valleycoin.zoo.codes {
+  import logger valleycoin.zoo.codes
+
+  reverse_proxy valleycoin-valleycoin-1:5000 {
+    header_up Host {host}
+    header_up X-Real-IP {remote_host}
+    header_up X-Forwarded-For {remote_host}
+    header_up X-Forwarded-Proto {scheme}
+  }
+  
+  @websockets {
+      header Connection *Upgrade*
+      header Upgrade websocket
+  }
+  reverse_proxy @websockets valleycoin-valleycoin-1:5000
+
+}
